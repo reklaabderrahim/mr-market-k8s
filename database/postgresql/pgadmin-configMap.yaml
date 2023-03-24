@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgadmin-config
+  namespace: databases
+data:
+  servers.json: |
+    {
+      "Servers": {
+        "1": {
+          "Name": "K8S DB",
+          "Group": "Servers",
+          "Port": 5432,
+          "Username": "rekla",
+          "Host": "10.107.30.19",
+          "MaintenanceDB": "postgres"
+        }
+      }
+    }

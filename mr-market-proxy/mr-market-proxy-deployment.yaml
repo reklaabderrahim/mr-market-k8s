@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mr-market-proxy-deployment
+  name: mr-market-proxy-deployment
+  namespace: mr-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mr-market-proxy-deployment
+  template:
+    metadata:
+      labels:
+        app: mr-market-proxy-deployment
+    spec:
+      containers:
+        - image: reklaabderrahim/mr-market-proxy:latest
+          name: mr-market-proxy
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mr-market-proxy-service
+  namespace: mr-market
+spec:
+  selector:
+    app: mr-market-proxy-deployment
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083

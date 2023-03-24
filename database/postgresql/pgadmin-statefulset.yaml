@@ -1,0 +1,85 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: pgadmin
+  namespace: databases
+spec:
+  serviceName: pgadmin-service
+  podManagementPolicy: Parallel
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: pgadmin
+  template:
+    metadata:
+      labels:
+        app: pgadmin
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: pgadmin
+          image: thajeztah/pgadmin4
+          imagePullPolicy: Always
+          env:
+            - name: PGADMIN_DEFAULT_EMAIL
+              value: reklaabderrahim@hotmail.com
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: pgadmin
+                  key: pgadmin-password
+          ports:
+            - name: http
+              containerPort: 5050
+              protocol: TCP
+          volumeMounts:
+            - name: pgadmin-config
+              mountPath: /pgadmin4/servers.json
+              subPath: servers.json
+              readOnly: true
+            - name: pgadmin-data
+              mountPath: /var/lib/pgadmin
+      volumes:
+        - name: pgadmin-config
+          configMap:
+            name: pgadmin-config
+  volumeClaimTemplates:
+    - metadata:
+        name: pgadmin-data
+      spec:
+        storageClassName: "manuel"
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 3Gi
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: pgadmin-headless
+#  namespace: databases
+#spec:
+#  ports:
+#    - protocol: TCP
+#      port: 80
+#      targetPort: http
+#      name: pgadmin
+#  selector:
+#    app: pgadmin
+#  clusterIP: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin-lb
+  namespace: databases
+spec:
+  selector:
+    app: pgadmin
+  type: LoadBalancer
+  ports:
+    - port: 5050
+      targetPort: 5050

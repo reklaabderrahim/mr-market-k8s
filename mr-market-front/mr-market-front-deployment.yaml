@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mr-market-front-deployment
+  name: mr-market-front-deployment
+  namespace: mr-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mr-market-front-deployment
+  template:
+    metadata:
+      labels:
+        app: mr-market-front-deployment
+    spec:
+      containers:
+        - image: reklaabderrahim/mr-market-front:latest
+          name: mr-market-front
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mr-market-front-service
+  namespace: mr-market
+spec:
+  selector:
+    app: mr-market-front-deployment
+  ports:
+    - protocol: TCP
+      port: 4200
+      targetPort: 80

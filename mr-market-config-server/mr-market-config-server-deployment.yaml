@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mr-market-config-server-deployment
+  name: mr-market-config-server-deployment
+  namespace: mr-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mr-market-config-server-deployment
+  template:
+    metadata:
+      labels:
+        app: mr-market-config-server-deployment
+    spec:
+      containers:
+        - image: reklaabderrahim/mr-market-config-server:latest
+          name: mr-market-config-server
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mr-market-config-server-service
+  namespace: mr-market
+spec:
+  selector:
+    app: mr-market-config-server-deployment
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080

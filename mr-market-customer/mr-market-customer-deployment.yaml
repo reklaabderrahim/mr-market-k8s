@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mr-market-customer-deployment
+  name: mr-market-customer-deployment
+  namespace: mr-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mr-market-customer-deployment
+  template:
+    metadata:
+      labels:
+        app: mr-market-customer-deployment
+    spec:
+      containers:
+        - image: reklaabderrahim/mr-market-customer:latest
+          name: mr-market-customer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mr-market-customer-service
+  namespace: mr-market
+spec:
+  selector:
+    app: mr-market-customer-deployment
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081

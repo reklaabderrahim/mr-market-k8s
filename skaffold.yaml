@@ -1,0 +1,53 @@
+apiVersion: skaffold/v4beta2
+kind: Config
+metadata:
+  name: mr-market
+build:
+  artifacts:
+  - image: reklaabderrahim/mr-market-config-server
+    context: mr-market-config-server
+    jib:
+      type: maven
+      args:
+        - -Pjib
+  - image: reklaabderrahim/mr-market-customer
+    context: mr-market-customer
+    jib:
+      type: maven
+      args:
+        - -Pjib
+  - image: reklaabderrahim/mr-market-front
+    context: mr-market-front
+    docker:
+      dockerfile: Dockerfile
+  - image: reklaabderrahim/mr-market-product
+    context: mr-market-product
+    jib:
+      type: maven
+      args:
+        - -Pjib
+  - image: reklaabderrahim/mr-market-proxy
+    context: mr-market-proxy
+    jib:
+      type: maven
+      args:
+        - -Pjib
+manifests:
+  rawYaml:
+  - k8s/ingress-route.yaml
+  - k8s/database/mongodb/headless-service.yaml
+  - k8s/database/mongodb/mongodb-statefulset.yaml
+  - k8s/database/mongodb/service.yaml
+  - k8s/database/postgresql/pgadmin-configMap.yaml
+  - k8s/database/postgresql/pgadmin-ingress.yaml
+  - k8s/database/postgresql/pgadmin-pv.yaml
+  - k8s/database/postgresql/pgadmin-secret.yaml
+  - k8s/database/postgresql/pgadmin-statefulset.yaml
+  - k8s/database/postgresql/postgresql-configmap.yaml
+  - k8s/database/postgresql/postgresql-pv.yaml
+  - k8s/database/postgresql/postgresql-statefulset.yaml
+  - k8s/mr-market-config-server/mr-market-config-server-deployment.yaml
+  - k8s/mr-market-customer/mr-market-customer-deployment.yaml
+  - k8s/mr-market-front/mr-market-front-deployment.yaml
+  - k8s/mr-market-product/mr-market-product-deployment.yaml
+  - k8s/mr-market-proxy/mr-market-proxy-deployment.yaml
