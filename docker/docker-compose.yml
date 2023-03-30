@@ -1,11 +1,11 @@
 version: "3.7"
 services:
   pgadmin:
-    image: thajeztah/pgadmin4
+    image: dpage/pgadmin4
     container_name: PGADMIN4_LOCAL
     restart: always
     ports:
-      - "5050:5050"
+      - "5050:80"
     volumes:
       - "pgadmin:/var/lib/pgadmin"
     environment:
