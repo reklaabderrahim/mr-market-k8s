@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cert
+  namespace: default
+spec:
+  commonName: rama-sweets.freeboxos.fr
+  secretName: cert
+  dnsNames:
+    - rama-sweets.freeboxos.fr
+  issuerRef:
+    kind: Issuer
+    name: letsencrypt-prod
